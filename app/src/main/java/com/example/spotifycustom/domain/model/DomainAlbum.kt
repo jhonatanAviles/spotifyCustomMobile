@@ -1,6 +1,6 @@
-package com.example.spotifycustom.data.model
+package com.example.spotifycustom.domain.model
 
-data class Album(
+data class DomainAlbum(
     val id: String,
     val name: String,
     val artistId: String,

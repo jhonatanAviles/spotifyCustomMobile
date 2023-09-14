@@ -1,4 +1,4 @@
-package com.example.spotifycustom.data.model
+package com.example.spotifycustom.data.dto
 
 data class Song(
     val id: String,
