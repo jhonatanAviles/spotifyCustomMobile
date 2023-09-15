@@ -8,14 +8,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.spotifycustom.navigation.NavScreen
-import com.example.spotifycustom.screen.AlbumsScreen
-import com.example.spotifycustom.screen.ArtistsScreen
-import com.example.spotifycustom.screen.SongsScreen
+import com.example.spotifycustom.screens.AlbumsScreen
+import com.example.spotifycustom.screens.ArtistsScreen
+import com.example.spotifycustom.screens.SongsScreen
+import com.example.spotifycustom.viewmodels.PaletteViewModel
 
 @Composable
 fun NavigationHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    paletteViewModel: PaletteViewModel,
 ) {
     NavHost(
         modifier = modifier,
@@ -26,7 +28,7 @@ fun NavigationHost(
             route = NavScreen.ScreenArtists.route
         ) {
             // Replace with the Composable for the Artists screen
-            ArtistsScreen(navController)
+            ArtistsScreen(navController, paletteViewModel)
         }
 
         composable(
@@ -41,7 +43,7 @@ fun NavigationHost(
         ) { navBackStackEntry ->
             val artistId = navBackStackEntry.arguments?.getString("artistId")
             // Replace with the Composable for the Albums screen with the artistId
-            AlbumsScreen(navController, artistId)
+            AlbumsScreen(navController, artistId, paletteViewModel)
         }
 
         composable(

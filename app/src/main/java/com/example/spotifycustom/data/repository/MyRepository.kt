@@ -19,17 +19,24 @@ class MyRepository {
     fun getArtists(): Flow<List<DomainArtist>> {
         return flow {
             val artistsSnapshot = db.collection("artists").get().await()
-            val artists = artistsSnapshot.toObjects(Artist::class.java)
-            val domainArtists = artists.map { it.toDomainModel() }
+            val domainArtists = artistsSnapshot.mapNotNull { docSnapshot ->
+                val artist = docSnapshot.toObject(Artist::class.java)
+                val artistId = docSnapshot.id // Get the Firestore document ID
+                artist.toDomainModel(artistId) // Pass the ID to your mapping function
+            }
             emit(domainArtists)
         }
     }
 
+
     fun getAlbums(): Flow<List<DomainAlbum>> {
         return flow {
             val albumsSnapshot = db.collection("albums").get().await()
-            val albums = albumsSnapshot.toObjects(Album::class.java)
-            val domainAlbums = albums.map { it.toDomainModel() }
+            val domainAlbums = albumsSnapshot.mapNotNull { docSnapshot ->
+                val album = docSnapshot.toObject(Album::class.java)
+                val albumId = docSnapshot.id // Get the Firestore document ID for albums
+                album.toDomainModel(albumId) // Pass the ID to your mapping function
+            }
             emit(domainAlbums)
         }
     }
@@ -37,8 +44,47 @@ class MyRepository {
     fun getSongs(): Flow<List<DomainSong>> {
         return flow {
             val songsSnapshot = db.collection("songs").get().await()
-            val songs = songsSnapshot.toObjects(Song::class.java)
-            val domainSongs = songs.map { it.toDomainModel() }
+            val domainSongs = songsSnapshot.mapNotNull { docSnapshot ->
+                val song = docSnapshot.toObject(Song::class.java)
+                val songId = docSnapshot.id // Get the Firestore document ID for songs
+                song.toDomainModel(songId) // Pass the ID to your mapping function
+            }
+            emit(domainSongs)
+        }
+    }
+
+    // Function to get albums by artist
+    fun getAlbumsByArtist(artistId: String): Flow<List<DomainAlbum>> {
+        return flow {
+            val albumsSnapshot = db.collection("albums")
+                .whereEqualTo("artistId", artistId)
+                .get()
+                .await()
+
+            val domainAlbums = albumsSnapshot.mapNotNull { docSnapshot ->
+                val album = docSnapshot.toObject(Album::class.java)
+                val albumId = docSnapshot.id
+                album.toDomainModel(albumId)
+            }
+
+            emit(domainAlbums)
+        }
+    }
+
+    // Function to get songs by album
+    fun getSongsByAlbum(albumId: String): Flow<List<DomainSong>> {
+        return flow {
+            val songsSnapshot = db.collection("songs")
+                .whereEqualTo("albumId", albumId)
+                .get()
+                .await()
+
+            val domainSongs = songsSnapshot.mapNotNull { docSnapshot ->
+                val song = docSnapshot.toObject(Song::class.java)
+                val songId = docSnapshot.id
+                song.toDomainModel(songId)
+            }
+
             emit(domainSongs)
         }
     }

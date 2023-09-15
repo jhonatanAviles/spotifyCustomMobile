@@ -1,9 +1,9 @@
 package com.example.spotifycustom.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.outlined.Album
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class NavScreen(
@@ -11,8 +11,8 @@ enum class NavScreen(
     val title: String,
     val icon: ImageVector
 ) {
-    ScreenArtists("artists", "Artists", Icons.Outlined.Person),
-    ScreenAlbums("albums", "Albums", Icons.Outlined.Album),
+    ScreenArtists("artists", "Artists", Icons.Filled.Person),
+    ScreenAlbums("albums", "Albums", Icons.Filled.Album),
     ScreenSongs("songs", "Songs", Icons.Filled.MusicNote);
 
     companion object {
