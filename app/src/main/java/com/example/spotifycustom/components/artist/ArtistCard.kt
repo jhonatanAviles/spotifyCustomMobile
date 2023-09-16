@@ -90,8 +90,6 @@ fun ArtistCard(
                     .padding(16.dp)
             ) {
 
-                Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = artist.name,
                     style = TextStyle(

@@ -8,7 +8,10 @@ import com.example.spotifycustom.components.header.PageHeader
 import com.example.spotifycustom.viewmodels.PaletteViewModel
 
 @Composable
-fun ArtistsScreen(navController: NavHostController, paletteViewModel: PaletteViewModel) {
+fun ArtistsScreen(
+    navController: NavHostController,
+    paletteViewModel: PaletteViewModel,
+) {
     Column {
         PageHeader("Artists")
         ArtistView(navController, paletteViewModel)

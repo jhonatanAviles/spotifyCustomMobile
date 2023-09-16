@@ -28,6 +28,10 @@ fun AlbumPaletteComponent(
     var launchedEffectTriggered by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
+        if (colorPalettes.containsKey(album.imageUrl)) {
+            launchedEffectTriggered = true
+            return@LaunchedEffect
+        }
 
         try {
             val bitmap = PaletteGenerator.convertImageUrlToBitmap(

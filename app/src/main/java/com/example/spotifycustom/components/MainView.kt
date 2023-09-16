@@ -2,6 +2,7 @@ package com.example.spotifycustom.components
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,12 +11,18 @@ import com.example.spotifycustom.components.navigation.BottomNavigation
 import com.example.spotifycustom.components.navigation.NavigationHost
 import com.example.spotifycustom.navigation.NavScreen
 import com.example.spotifycustom.viewmodels.PaletteViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun MainView() {
     val navController = rememberNavController()
 
     val paletteViewModel = PaletteViewModel()
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(
+        color = MaterialTheme.colors.background
+    )
 
     // Use Scaffold to create the basic layout with top app bar and bottom navigation
     Scaffold(

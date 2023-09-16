@@ -1,5 +1,6 @@
 package com.example.spotifycustom.components.palette
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,12 +24,18 @@ fun ArtistPaletteComponent(
     onArtistClick: (String) -> Unit
 ) {
 
+    Log.d("RENDERS", "Rendering..." + artist.name)
+
     val colorPalettes by paletteViewModel.colorPalettes
     val context = LocalContext.current
 
     var launchedEffectTriggered by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
+        if (colorPalettes.containsKey(artist.imageUrl)) {
+            launchedEffectTriggered = true
+            return@LaunchedEffect
+        }
 
         try {
             val bitmap = convertImageUrlToBitmap(
