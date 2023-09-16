@@ -9,5 +9,6 @@ data class Song(
     val albumId: String? = null,
     val artistId: String? = null,
     val imageUrl: String? = null,
-    val songUrl: String? = null
+    val songUrl: String? = null,
+    val durationInSeconds: Double? = null,
 ) : Parcelable

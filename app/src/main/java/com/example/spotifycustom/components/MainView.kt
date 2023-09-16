@@ -36,7 +36,7 @@ fun MainView() {
         NavigationHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            paletteViewModel = paletteViewModel
+            paletteViewModel = paletteViewModel,
         )
     }
 

@@ -10,7 +10,8 @@ fun Song.toDomainModel(songId: String): DomainSong {
         albumId = this.albumId  ?: "",
         artistId = this.artistId  ?: "",
         imageUrl = this.imageUrl  ?: "",
-        songUrl = this.songUrl  ?: ""
+        songUrl = this.songUrl  ?: "",
+        durationInSeconds = this.durationInSeconds ?: 0.toDouble(),
     )
 }
 
@@ -20,6 +21,7 @@ fun DomainSong.toDataModel(): Song {
         albumId = this.albumId,
         artistId = this.artistId,
         imageUrl = this.imageUrl,
-        songUrl = this.songUrl
+        songUrl = this.songUrl,
+        durationInSeconds = this.durationInSeconds
     )
 }

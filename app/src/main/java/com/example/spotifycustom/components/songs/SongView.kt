@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifycustom.data.repository.MyRepository
 import com.example.spotifycustom.viewmodels.SongsViewModel
@@ -15,17 +14,11 @@ import com.example.spotifycustom.viewmodels.SongsViewModelFactory
 import com.google.android.exoplayer2.ExoPlayer
 
 @Composable
-fun SongView() {
-
-    val context = LocalContext.current
+fun SongView(player: ExoPlayer) {
 
     val songsViewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(MyRepository())
     )
-
-    val player = remember {
-        ExoPlayer.Builder(context).build()
-    }
 
     val onAddToFavoritesClick: () -> Unit = {
         // Implement your logic for adding to favorites here
@@ -42,7 +35,6 @@ fun SongView() {
             SongComponent(
                 song = song,
                 onAddToFavoritesClick = onAddToFavoritesClick,
-                context = context,
                 player = player
             )
         }

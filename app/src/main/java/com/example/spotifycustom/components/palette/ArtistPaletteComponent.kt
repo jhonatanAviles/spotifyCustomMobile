@@ -1,6 +1,5 @@
 package com.example.spotifycustom.components.palette
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,8 +22,6 @@ fun ArtistPaletteComponent(
     paletteViewModel: PaletteViewModel,
     onArtistClick: (String) -> Unit
 ) {
-
-    Log.d("RENDERS", "Rendering..." + artist.name)
 
     val colorPalettes by paletteViewModel.colorPalettes
     val context = LocalContext.current
