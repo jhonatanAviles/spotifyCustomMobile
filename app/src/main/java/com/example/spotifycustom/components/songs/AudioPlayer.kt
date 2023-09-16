@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,36 +32,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.example.spotifycustom.domain.model.DomainSong
+import com.example.spotifycustom.utils.formatSecondsToMinutesAndSeconds
 import com.example.spotifycustom.viewmodels.audio.AudioPlayerViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 
 @Composable
-fun AudioPlayer(player: ExoPlayer) {
+fun AudioPlayer(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
     val viewModel: AudioPlayerViewModel = viewModel()
-    val context = LocalContext.current
-    val audioUrl =
-        "https://firebasestorage.googleapis.com/v0/b/testfirebase-3bbe2.appspot.com/o/songs%2Fmedia%2FCreep%2F01.%20Creep.flac?alt=media&token=8efcd69e-5795-45a3-b431-b211c6194bcd"
-    val imageUrl = "https://d2yoo3qu6vrk5d.cloudfront.net/images/20230228094220/perro-japon.jpg"
-    val name = "Musica sad"
+
+      val imageUrl = "https://d2yoo3qu6vrk5d.cloudfront.net/images/20230228094220/perro-japon.jpg"
 
     val coroutineScope = rememberCoroutineScope()
 
-    val currentProgress by viewModel.getCurrentProgressState(audioUrl)
-    val seekPercentage by viewModel.getCurrentProgressState(audioUrl)
+    val seekPercentage by viewModel.getCurrentProgressState(songToReproduce.value.songUrl)
 
 
     // Prepare the MediaItem with the audio source URL.
     val mediaItem = remember {
         MediaItem.Builder()
-            .setUri(Uri.parse(audioUrl))
+            .setUri(Uri.parse(songToReproduce.value.songUrl))
             .build()
     }
 
@@ -69,11 +68,14 @@ fun AudioPlayer(player: ExoPlayer) {
         }
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colors.secondary)
+            .padding(16.dp, 16.dp, 16.dp, 0.dp),
+    ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Image (Assuming you have a function to load the song image)
@@ -115,12 +117,12 @@ fun AudioPlayer(player: ExoPlayer) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = name,
+                    text = songToReproduce.value.name,
                     style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Duration: ${player.duration}",
+                    text = "Duration: ${formatSecondsToMinutesAndSeconds(songToReproduce.value.durationInSeconds)}",
                     style = TextStyle(fontSize = 14.sp, color = Color.Gray)
                 )
             }
@@ -130,17 +132,16 @@ fun AudioPlayer(player: ExoPlayer) {
             value = seekPercentage,
             onValueChange = { newValue ->
                 run {
-                    viewModel.setSeekPercentage(audioUrl, newValue.toString())
+                    viewModel.setSeekPercentage(songToReproduce.value.songUrl, newValue.toString())
                     val seekPercentageLocal =
-                        viewModel.getSeekPercentageState(audioUrl).value.toFloatOrNull()
+                        viewModel.getSeekPercentageState(songToReproduce.value.songUrl).value.toFloatOrNull()
                             ?: return@Slider
                     val newPosition = (seekPercentageLocal) * player.duration
                     player.seekTo(newPosition.toLong())
                 }
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+                .fillMaxWidth(),
         )
     }
     /*
@@ -202,7 +203,7 @@ fun AudioPlayer(player: ExoPlayer) {
             val currentPosition = player.currentPosition
             val duration = player.duration
             val progress = if (duration > 0) currentPosition.toFloat() / duration.toFloat() else 0f
-            viewModel.updateProgress(audioUrl, progress)
+            viewModel.updateProgress(songToReproduce.value.songUrl, progress)
             kotlinx.coroutines.delay(1000)
         }
     }

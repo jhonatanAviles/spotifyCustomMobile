@@ -5,16 +5,18 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifycustom.data.repository.MyRepository
+import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.viewmodels.SongsViewModel
 import com.example.spotifycustom.viewmodels.SongsViewModelFactory
 import com.google.android.exoplayer2.ExoPlayer
 
 @Composable
-fun SongView(player: ExoPlayer) {
+fun SongView(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
 
     val songsViewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(MyRepository())
@@ -35,7 +37,8 @@ fun SongView(player: ExoPlayer) {
             SongComponent(
                 song = song,
                 onAddToFavoritesClick = onAddToFavoritesClick,
-                player = player
+                player = player,
+                songToReproduce = songToReproduce,
             )
         }
     }
