@@ -47,19 +47,16 @@ import kotlinx.coroutines.delay
 fun SongComponent(
     song: DomainSong,
     onAddToFavoritesClick: () -> Unit,
-    context: Context
+    context: Context,
+    player: ExoPlayer
 ) {
 
     val viewModel: AudioPlayerViewModel = viewModel()
 
-    val player = remember {
-        ExoPlayer.Builder(context).build()
-    }
 
 // Collect progress updates for the specific song
     val currentProgress by viewModel.getCurrentProgressState(song.songUrl)
     val seekPercentage by viewModel.getSeekPercentageState(song.songUrl)
-
 
 
     // Prepare the MediaItem with the audio source URL.
