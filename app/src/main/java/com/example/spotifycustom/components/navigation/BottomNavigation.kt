@@ -43,11 +43,12 @@ fun BottomNavigation(items: Array<NavScreen>, navController: NavHostController) 
             horizontalArrangement = Arrangement.SpaceEvenly // Centers items horizontally with equal spacing
         ) {
             items.forEach { screen ->
-                BottomNavigationItem(
-                    screen = screen,
-                    currentScreen = currentScreen,
-                    onScreenSelected = onScreenSelected
-                )
+                if (screen != NavScreen.ScreenLogin && screen != NavScreen.ScreenRegister)
+                    BottomNavigationItem(
+                        screen = screen,
+                        currentScreen = currentScreen,
+                        onScreenSelected = onScreenSelected
+                    )
             }
         }
     }
