@@ -16,6 +16,14 @@ class SongsViewModel(private val repository: MyRepository) : ViewModel() {
         initialValue = emptyList() // Optional: Initial value
     )
 
+    fun getFavoriteSongs(userId: String): StateFlow<List<DomainSong>> {
+        return repository.getFavoriteSongsByUser(userId).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(), // Optional: SharingStarted parameter
+            initialValue = emptyList() // Optional: Initial value
+        )
+    }
+
     suspend fun addFavoriteSongByUser(userId: String, songId: String): Boolean {
         return repository.addFavoriteSongByUser(userId, songId)
     }

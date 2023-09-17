@@ -3,6 +3,7 @@ package com.example.spotifycustom.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Album
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
@@ -16,6 +17,7 @@ enum class NavScreen(
     ScreenArtists("artists", "Artists", Icons.Filled.Person),
     ScreenAlbums("albums", "Albums", Icons.Filled.Album),
     ScreenSongs("songs", "Songs", Icons.Filled.MusicNote),
+    ScreenFavoriteSongs("favorite-songs", "Favorite", Icons.Filled.Favorite),
     ScreenLogin("login", "Login", Icons.Filled.AccountCircle),
     ScreenRegister("register", "Register", Icons.Filled.AccountCircle),
     ScreenAccount("account", "Account", Icons.Filled.ManageAccounts);
@@ -25,6 +27,7 @@ enum class NavScreen(
             ScreenArtists.route -> ScreenArtists
             ScreenAlbums.route -> ScreenAlbums
             ScreenSongs.route -> ScreenSongs
+            ScreenFavoriteSongs.route -> ScreenFavoriteSongs
             ScreenLogin.route -> ScreenLogin
             ScreenRegister.route -> ScreenRegister
             ScreenAccount.route -> ScreenAccount

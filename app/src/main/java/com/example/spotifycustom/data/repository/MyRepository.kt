@@ -162,19 +162,23 @@ class MyRepository {
                 document.getString("songId") ?: ""
             }
 
-            // Fetch the favorite songs based on the retrieved song IDs
-            val songsSnapshot = db.collection("songs")
-                .whereIn(FieldPath.documentId(), songIds)
-                .get()
-                .await()
+            if (songIds.isNotEmpty()) {
+                // Fetch the favorite songs based on the retrieved song IDs
+                val songsSnapshot = db.collection("songs")
+                    .whereIn(FieldPath.documentId(), songIds)
+                    .get()
+                    .await()
 
-            val domainSongs = songsSnapshot.mapNotNull { docSnapshot ->
-                val song = docSnapshot.toObject(Song::class.java)
-                val songId = docSnapshot.id
-                song.toDomainModel(songId)
+                val domainSongs = songsSnapshot.mapNotNull { docSnapshot ->
+                    val song = docSnapshot.toObject(Song::class.java)
+                    val songId = docSnapshot.id
+                    song.toDomainModel(songId)
+                }
+
+                emit(domainSongs)
+            } else {
+                emit(emptyList()) // No favorite songs, emit an empty list
             }
-
-            emit(domainSongs)
         }
     }
 }

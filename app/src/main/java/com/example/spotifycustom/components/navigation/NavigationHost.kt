@@ -11,6 +11,7 @@ import com.example.spotifycustom.navigation.NavScreen
 import com.example.spotifycustom.screens.AlbumsScreen
 import com.example.spotifycustom.screens.ArtistsScreen
 import com.example.spotifycustom.screens.LoginScreen
+import com.example.spotifycustom.screens.MyFavoriteSongsScreen
 import com.example.spotifycustom.screens.ProfileScreen
 import com.example.spotifycustom.screens.RegisterScreen
 import com.example.spotifycustom.screens.SongsScreen
@@ -64,6 +65,12 @@ fun NavigationHost(
             val albumId = navBackStackEntry.arguments?.getString("albumId")
             // Replace with the Composable for the Songs screen with the albumId
             SongsScreen(navController, albumId)
+        }
+
+        composable(
+            route = NavScreen.ScreenFavoriteSongs.route,
+        ) {
+            MyFavoriteSongsScreen()
         }
 
         composable(

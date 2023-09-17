@@ -18,7 +18,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -168,7 +169,7 @@ fun SongComponent(
                 modifier = Modifier.size(40.dp),
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Favorite,
+                    imageVector = if (isFavorite.value) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = "Add to Favorites",
                     tint = if (isFavorite.value) Color.Red else Color.Gray
                 )
