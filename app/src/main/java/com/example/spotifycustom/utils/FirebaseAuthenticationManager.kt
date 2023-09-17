@@ -40,6 +40,10 @@ class FirebaseAuthenticationManager {
             }
     }
 
+    fun getUser(): FirebaseUser? {
+        return auth.currentUser
+    }
+
     // Sign Out Function
     fun signOut() {
         auth.signOut()

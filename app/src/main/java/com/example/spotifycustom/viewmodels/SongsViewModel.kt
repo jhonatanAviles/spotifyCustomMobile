@@ -8,11 +8,23 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-class SongsViewModel(repository: MyRepository) : ViewModel() {
+class SongsViewModel(private val repository: MyRepository) : ViewModel() {
 
     val songs: StateFlow<List<DomainSong>> = repository.getSongs().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(), // Optional: SharingStarted parameter
         initialValue = emptyList() // Optional: Initial value
     )
+
+    suspend fun addFavoriteSongByUser(userId: String, songId: String): Boolean {
+        return repository.addFavoriteSongByUser(userId, songId)
+    }
+
+    suspend fun checkIfSongIsFavorite(userId: String, songId: String): Boolean {
+        return repository.checkIfSongIsFavorite(userId, songId)
+    }
+
+    suspend fun removeFavoriteSongByUser(userId: String, songId: String): Boolean {
+        return repository.removeFavoriteSongByUser(userId, songId)
+    }
 }

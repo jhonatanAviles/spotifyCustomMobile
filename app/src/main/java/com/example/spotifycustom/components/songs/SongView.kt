@@ -22,11 +22,6 @@ fun SongView(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
         factory = SongsViewModelFactory(MyRepository())
     )
 
-    val onAddToFavoritesClick: () -> Unit = {
-        // Implement your logic for adding to favorites here
-        // For example, you can update the ViewModel or perform any other action.
-    }
-
     val songsState = songsViewModel.songs.collectAsState(initial = emptyList())
     val songs = songsState.value // Access the value of the State
 
@@ -36,9 +31,9 @@ fun SongView(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
         }) { song ->
             SongComponent(
                 song = song,
-                onAddToFavoritesClick = onAddToFavoritesClick,
                 player = player,
                 songToReproduce = songToReproduce,
+                songsViewModel = songsViewModel,
             )
         }
     }

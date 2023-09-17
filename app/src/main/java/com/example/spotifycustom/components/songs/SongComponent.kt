@@ -21,8 +21,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,16 +38,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.spotifycustom.domain.model.DomainSong
+import com.example.spotifycustom.utils.FirebaseAuthenticationManager
 import com.example.spotifycustom.utils.formatSecondsToMinutesAndSeconds
+import com.example.spotifycustom.viewmodels.SongsViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import kotlinx.coroutines.launch
 
 @Composable
 fun SongComponent(
     song: DomainSong,
-    onAddToFavoritesClick: () -> Unit,
     player: ExoPlayer,
-    songToReproduce: MutableState<DomainSong>
+    songToReproduce: MutableState<DomainSong>,
+    songsViewModel: SongsViewModel
 ) {
 
     // Prepare the MediaItem with the audio source URL.
@@ -51,6 +58,22 @@ fun SongComponent(
         MediaItem.Builder()
             .setUri(Uri.parse(song.songUrl))
             .build()
+    }
+
+    val isFavorite = rememberSaveable { mutableStateOf(false) }
+    val isLoading = rememberSaveable { mutableStateOf(true) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val authManager = FirebaseAuthenticationManager()
+
+    val user = authManager.getUser()
+
+    LaunchedEffect(key1 = Unit) {
+        if (user != null) {
+            isFavorite.value = songsViewModel.checkIfSongIsFavorite(user.uid, song.id)
+        }
+        isLoading.value = false
     }
 
     DisposableEffect(player) {
@@ -117,15 +140,38 @@ fun SongComponent(
         Spacer(modifier = Modifier.width(16.dp))
 
         // Heart button (Add to favorites)
-        IconButton(
-            onClick = { onAddToFavoritesClick() },
-            modifier = Modifier.size(40.dp),
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Favorite,
-                contentDescription = "Add to Favorites",
-                tint = Color.Gray
-            )
-        }
+        if (!isLoading.value)
+            IconButton(
+                onClick = {
+                    if (isFavorite.value) {
+                        isLoading.value = true
+                        coroutineScope.launch {
+                            // Remove from favorites
+                            val removed = if (user?.uid != null) songsViewModel.removeFavoriteSongByUser(user.uid, song.id) else false
+                            if (removed) {
+                                isFavorite.value = false
+                            }
+                            isLoading.value = false
+                        }
+                    } else {
+                        isLoading.value = true
+                        coroutineScope.launch {
+                            // Add to favorites
+                            val added = if (user?.uid != null) songsViewModel.addFavoriteSongByUser(user.uid, song.id) else false
+                            if (added) {
+                                isFavorite.value = true
+                            }
+                            isLoading.value = false
+                        }
+                    }
+                },
+                modifier = Modifier.size(40.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Favorite,
+                    contentDescription = "Add to Favorites",
+                    tint = if (isFavorite.value) Color.Red else Color.Gray
+                )
+            }
     }
 }

@@ -3,6 +3,7 @@ package com.example.spotifycustom.utils
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.util.Log
 import com.example.spotifycustom.domain.model.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
@@ -27,6 +28,7 @@ class GoogleAuthUiClient(
             ).await()
         } catch(e: Exception) {
             e.printStackTrace()
+            Log.e("GoogleAuthUiClient", "Error during sign-in: ${e.message}")
             if(e is CancellationException) throw e
             null
         }

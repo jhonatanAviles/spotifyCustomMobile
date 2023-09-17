@@ -1,5 +1,7 @@
 package com.example.spotifycustom.components.register
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -56,6 +59,8 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
     val passwordFocusRequester = remember { FocusRequester() }
 
     val authManager = FirebaseAuthenticationManager()
+
+    val context = LocalContext.current
 
 
     Column(
@@ -164,7 +169,7 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
                 onDone = {
                     // Handle the done action (e.g., perform sign-in) only if both fields are valid
                     if (isEmailValid && isPasswordValid) {
-                        onSignUpWithEmailClick(authManager, email, password, navController, authViewModel)
+                        onSignUpWithEmailClick(authManager, email, password, navController, authViewModel, context)
                     }
                 }
             ),
@@ -178,7 +183,14 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
             onClick = {
                 // Handle the done action (e.g., perform sign-in) only if both fields are valid
                 if (isEmailValid && isPasswordValid) {
-                    onSignUpWithEmailClick(authManager, email, password, navController, authViewModel)
+                    onSignUpWithEmailClick(
+                        authManager,
+                        email,
+                        password,
+                        navController,
+                        authViewModel,
+                        context
+                    )
                 }
             },
             modifier = Modifier
@@ -219,7 +231,8 @@ fun onSignUpWithEmailClick(
     email: String,
     password: String,
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    context: Context,
 ) {
     // Sign Up Example
     authManager.signUpWithEmail(
@@ -236,6 +249,7 @@ fun onSignUpWithEmailClick(
         onError = { exception ->
             // Sign-up failed, handle the error
             // Display an error message or take appropriate action
+            Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
         }
     )
 }
