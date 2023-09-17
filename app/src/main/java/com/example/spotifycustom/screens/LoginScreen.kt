@@ -67,12 +67,14 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
                 Toast.LENGTH_LONG
             ).show()
 
-            navController.navigate("profile")
+            authViewModel.isLoggedIn.value = true
+            navController.navigate(NavScreen.ScreenArtists.route)
             viewModel.resetState()
         }
     }
 
-    LoginView(state = state,
+    LoginView(
+        state = state,
         onSignInClick = {
             coroutineScope.launch {
                 val signInIntentSender = googleAuthUiClient.signIn()

@@ -1,5 +1,6 @@
 package com.example.spotifycustom.components.login
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -183,7 +184,7 @@ fun LoginView(
                 onDone = {
                     // Handle the done action (e.g., perform sign-in) only if both fields are valid
                     if (isEmailValid && isPasswordValid) {
-                        onLoginWithEmailClick(authManager, email, password, navController, authViewModel)
+                        onLoginWithEmailClick(authManager, email, password, navController, authViewModel, context)
                     }
                 }
             ),
@@ -197,7 +198,7 @@ fun LoginView(
             onClick = {
                 // Handle the done action (e.g., perform sign-in) only if both fields are valid
                 if (isEmailValid && isPasswordValid) {
-                    onLoginWithEmailClick(authManager, email, password, navController, authViewModel)
+                    onLoginWithEmailClick(authManager, email, password, navController, authViewModel, context)
                 }
             },
             modifier = Modifier
@@ -238,7 +239,8 @@ fun onLoginWithEmailClick(
     email: String,
     password: String,
     navController: NavController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    context: Context,
 ) {
     // Login Example
     authManager.loginWithEmail(
@@ -255,6 +257,7 @@ fun onLoginWithEmailClick(
         onError = { exception ->
             // Login failed, handle the error
             // Display an error message or take appropriate action
+            Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
         }
     )
 }
@@ -263,8 +266,4 @@ fun onCreateAccountClick(navController: NavController) {
     navController.navigate(NavScreen.ScreenRegister.route) {
         launchSingleTop = true
     }
-}
-
-fun onSignInWithGoogleClick() {
-
 }
