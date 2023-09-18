@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifycustom.components.header.PageHeader
 import com.example.spotifycustom.components.songs.AudioPlayer
@@ -20,15 +18,9 @@ import com.example.spotifycustom.utils.FirebaseAuthenticationManager
 import com.example.spotifycustom.utils.MutableStateDomainSongSaver
 import com.example.spotifycustom.viewmodels.SongsViewModel
 import com.example.spotifycustom.viewmodels.SongsViewModelFactory
-import com.google.android.exoplayer2.ExoPlayer
 
 @Composable
 fun MyFavoriteSongsScreen() {
-    val context = LocalContext.current
-
-    val player = remember {
-        ExoPlayer.Builder(context).build()
-    }
 
     val songToReproduce = rememberSaveable(
         saver = MutableStateDomainSongSaver()
@@ -50,8 +42,8 @@ fun MyFavoriteSongsScreen() {
     ) {
         Column {
             PageHeader(title = "Favorite Songs")
-            FavoriteSongsView(player, songToReproduce, user, songsViewModel)
+            FavoriteSongsView(songToReproduce, user, songsViewModel)
         }
-        if (songToReproduce.value.songUrl.isNotEmpty()) AudioPlayer(player, songToReproduce)
+        if (songToReproduce.value.songUrl.isNotEmpty()) AudioPlayer(songToReproduce)
     }
 }

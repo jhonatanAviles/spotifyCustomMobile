@@ -13,10 +13,9 @@ import com.example.spotifycustom.data.repository.MyRepository
 import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.viewmodels.SongsViewModel
 import com.example.spotifycustom.viewmodels.SongsViewModelFactory
-import com.google.android.exoplayer2.ExoPlayer
 
 @Composable
-fun SongView(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
+fun SongView(songToReproduce: MutableState<DomainSong>) {
 
     val songsViewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(MyRepository())
@@ -31,7 +30,6 @@ fun SongView(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
         }) { song ->
             SongComponent(
                 song = song,
-                player = player,
                 songToReproduce = songToReproduce,
                 songsViewModel = songsViewModel,
             )

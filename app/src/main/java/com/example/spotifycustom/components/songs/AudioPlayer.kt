@@ -26,12 +26,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,21 +45,27 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 
 @Composable
-fun AudioPlayer(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
+fun AudioPlayer(songToReproduce: MutableState<DomainSong>) {
+
+    val context = LocalContext.current
+
+    val player = remember {
+        ExoPlayer.Builder(context).build()
+    }
+
     val viewModel: AudioPlayerViewModel = viewModel()
-
-      val imageUrl = "https://d2yoo3qu6vrk5d.cloudfront.net/images/20230228094220/perro-japon.jpg"
-
-    val coroutineScope = rememberCoroutineScope()
 
     val seekPercentage by viewModel.getCurrentProgressState(songToReproduce.value.songUrl)
 
-
-    // Prepare the MediaItem with the audio source URL.
-    val mediaItem = remember {
-        MediaItem.Builder()
-            .setUri(Uri.parse(songToReproduce.value.songUrl))
-            .build()
+    LaunchedEffect(key1 = songToReproduce.value) {
+        // Prepare the MediaItem with the audio source URL.
+        val mediaItem =
+            MediaItem.Builder()
+                .setUri(Uri.parse(songToReproduce.value.songUrl))
+                .build()
+        player.setMediaItem(mediaItem)
+        player.prepare()
+        player.play()
     }
 
     DisposableEffect(player) {
@@ -80,7 +86,7 @@ fun AudioPlayer(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
         ) {
             // Image (Assuming you have a function to load the song image)
             Image(
-                painter = rememberAsyncImagePainter(imageUrl),
+                painter = rememberAsyncImagePainter(songToReproduce.value.imageUrl),
                 contentDescription = null, // Provide a meaningful description if needed
                 modifier = Modifier
                     .size(40.dp)
@@ -97,8 +103,6 @@ fun AudioPlayer(player: ExoPlayer, songToReproduce: MutableState<DomainSong>) {
                     if (player.isPlaying) {
                         player.pause()
                     } else {
-                        player.setMediaItem(mediaItem)
-                        player.prepare()
                         player.play()
                     }
                 },

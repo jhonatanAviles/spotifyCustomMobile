@@ -1,6 +1,5 @@
 package com.example.spotifycustom.components.songs
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,11 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -42,24 +39,14 @@ import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.utils.FirebaseAuthenticationManager
 import com.example.spotifycustom.utils.formatSecondsToMinutesAndSeconds
 import com.example.spotifycustom.viewmodels.SongsViewModel
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
 import kotlinx.coroutines.launch
 
 @Composable
 fun SongComponent(
     song: DomainSong,
-    player: ExoPlayer,
     songToReproduce: MutableState<DomainSong>,
     songsViewModel: SongsViewModel
 ) {
-
-    // Prepare the MediaItem with the audio source URL.
-    val mediaItem = remember {
-        MediaItem.Builder()
-            .setUri(Uri.parse(song.songUrl))
-            .build()
-    }
 
     val isFavorite = rememberSaveable { mutableStateOf(false) }
     val isLoading = rememberSaveable { mutableStateOf(true) }
@@ -77,12 +64,6 @@ fun SongComponent(
         isLoading.value = false
     }
 
-    DisposableEffect(player) {
-        onDispose {
-            player.release()
-        }
-    }
-
     Row(
         modifier = Modifier
             .background(
@@ -98,13 +79,6 @@ fun SongComponent(
                 }
 
                 songToReproduce.value = song
-
-                if (player.isPlaying) {
-                    player.pause()
-                }
-                player.setMediaItem(mediaItem)
-                player.prepare()
-                player.play()
             }
             .fillMaxWidth()
             .padding(16.dp),

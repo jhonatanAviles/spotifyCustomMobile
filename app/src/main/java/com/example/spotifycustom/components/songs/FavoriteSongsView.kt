@@ -8,12 +8,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.viewmodels.SongsViewModel
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.firebase.auth.FirebaseUser
 
 @Composable
 fun FavoriteSongsView(
-    player: ExoPlayer,
     songToReproduce: MutableState<DomainSong>,
     user: FirebaseUser?,
     songsViewModel: SongsViewModel,
@@ -26,7 +24,6 @@ fun FavoriteSongsView(
         }) { song ->
             SongComponent(
                 song = song,
-                player = player,
                 songToReproduce = songToReproduce,
                 songsViewModel = songsViewModel,
             )
