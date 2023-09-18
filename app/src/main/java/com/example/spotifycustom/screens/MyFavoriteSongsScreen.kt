@@ -40,10 +40,13 @@ fun MyFavoriteSongsScreen() {
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(5f)) {
             PageHeader(title = "Favorite Songs")
             FavoriteSongsView(songToReproduce, user, songsViewModel)
         }
-        if (songToReproduce.value.songUrl.isNotEmpty()) AudioPlayer(songToReproduce)
+        if (songToReproduce.value.songUrl.isNotEmpty())
+            Column(modifier = Modifier.weight(1f)) {
+                AudioPlayer(songToReproduce)
+            }
     }
 }
