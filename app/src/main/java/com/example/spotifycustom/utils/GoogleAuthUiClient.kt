@@ -12,6 +12,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.example.spotifycustom.R
+import com.example.spotifycustom.data.repository.MyRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
@@ -43,6 +44,8 @@ class GoogleAuthUiClient(
             val user = auth.signInWithCredential(googleCredentials).await().user
             SignInResult(
                 data = user?.run {
+                    val repo = MyRepository()
+                    repo.storeUserInFirestore(this)
                     UserData(
                         userId = uid,
                         username = displayName,

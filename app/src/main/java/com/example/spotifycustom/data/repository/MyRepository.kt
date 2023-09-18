@@ -4,10 +4,12 @@ import com.example.spotifycustom.data.dto.Album
 import com.example.spotifycustom.data.dto.Artist
 import com.example.spotifycustom.data.dto.FavoriteSongPerUser
 import com.example.spotifycustom.data.dto.Song
+import com.example.spotifycustom.data.dto.UserData
 import com.example.spotifycustom.domain.model.DomainAlbum
 import com.example.spotifycustom.domain.model.DomainArtist
 import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.mapper.toDomainModel
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
@@ -180,5 +182,53 @@ class MyRepository {
                 emit(emptyList()) // No favorite songs, emit an empty list
             }
         }
+    }
+
+    // Function to store user email and ID in Firestore
+    suspend fun storeUserInFirestore(user: FirebaseUser) {
+        val userId = user.uid
+        val userEmail = user.email
+
+        // Check if the user already exists in Firestore
+        if (checkIfUserExists(userId)) {
+            // User already exists, do not store their data again
+            return
+        }
+
+        // Create a data class to represent the user data
+        val userData = UserData(userId = userId, email = userEmail)
+
+        try {
+            // Specify the Firestore collection where you want to store user data
+            val usersCollection = db.collection("users")
+
+            // Use the user's UID as the document ID to uniquely identify the user
+            usersCollection.document(userId)
+                .set(userData)
+                .await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle the error, such as logging it or showing a message to the user
+        }
+    }
+
+    // Function to check if a user already exists in Firestore
+    private suspend fun checkIfUserExists(userId: String): Boolean {
+        try {
+            // Specify the Firestore collection where user data is stored
+            val usersCollection = db.collection("users")
+
+            // Use the user's UID to check if a document with the same ID exists
+            val documentSnapshot = usersCollection.document(userId).get().await()
+
+            // If the document exists, the user already exists in Firestore
+            return documentSnapshot.exists()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle the error, such as logging it or showing a message to the user
+        }
+
+        // Default to false in case of an error
+        return false
     }
 }
