@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import com.example.spotifycustom.components.header.PageHeader
 import com.example.spotifycustom.components.songs.AudioPlayer
 import com.example.spotifycustom.components.songs.SongView
@@ -15,7 +14,7 @@ import com.example.spotifycustom.domain.model.DomainSong
 import com.example.spotifycustom.utils.MutableStateDomainSongSaver
 
 @Composable
-fun SongsScreen(navController: NavHostController, albumId: String?) {
+fun SongsScreen(albumId: String?) {
 
     val songToReproduce = rememberSaveable(
         saver = MutableStateDomainSongSaver()
@@ -27,7 +26,7 @@ fun SongsScreen(navController: NavHostController, albumId: String?) {
     ) {
         Column(modifier = Modifier.weight(5f)) {
             PageHeader(title = "Songs")
-            SongView(songToReproduce)
+            SongView(songToReproduce, albumId)
         }
         if (songToReproduce.value.songUrl.isNotEmpty())
             Column(modifier = Modifier.weight(1f)) {

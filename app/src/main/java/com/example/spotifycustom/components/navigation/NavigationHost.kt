@@ -64,7 +64,7 @@ fun NavigationHost(
         ) { navBackStackEntry ->
             val albumId = navBackStackEntry.arguments?.getString("albumId")
             // Replace with the Composable for the Songs screen with the albumId
-            SongsScreen(navController, albumId)
+            SongsScreen(albumId)
         }
 
         composable(

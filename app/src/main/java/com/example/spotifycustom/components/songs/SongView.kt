@@ -15,13 +15,13 @@ import com.example.spotifycustom.viewmodels.SongsViewModel
 import com.example.spotifycustom.viewmodels.SongsViewModelFactory
 
 @Composable
-fun SongView(songToReproduce: MutableState<DomainSong>) {
+fun SongView(songToReproduce: MutableState<DomainSong>, albumId: String?) {
 
     val songsViewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(MyRepository())
     )
 
-    val songsState = songsViewModel.songs.collectAsState(initial = emptyList())
+    val songsState = if (albumId == null) songsViewModel.songs.collectAsState(initial = emptyList()) else songsViewModel.songsByAlbum(albumId).collectAsState(initial = emptyList())
     val songs = songsState.value // Access the value of the State
 
     LazyColumn() {
