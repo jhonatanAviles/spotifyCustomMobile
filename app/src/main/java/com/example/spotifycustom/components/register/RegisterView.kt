@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,9 +46,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.spotifycustom.R
+import com.example.spotifycustom.data.repository.MyRepository
 import com.example.spotifycustom.navigation.NavScreen
 import com.example.spotifycustom.utils.FirebaseAuthenticationManager
 import com.example.spotifycustom.viewmodels.AuthViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
@@ -61,6 +65,8 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
     val authManager = FirebaseAuthenticationManager()
 
     val context = LocalContext.current
+
+    val coroutine = rememberCoroutineScope()
 
 
     Column(
@@ -169,7 +175,7 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
                 onDone = {
                     // Handle the done action (e.g., perform sign-in) only if both fields are valid
                     if (isEmailValid && isPasswordValid) {
-                        onSignUpWithEmailClick(authManager, email, password, navController, authViewModel, context)
+                        onSignUpWithEmailClick(authManager, email, password, navController, authViewModel, context, coroutine)
                     }
                 }
             ),
@@ -189,7 +195,8 @@ fun RegisterView(navController: NavController, authViewModel: AuthViewModel) {
                         password,
                         navController,
                         authViewModel,
-                        context
+                        context,
+                        coroutine
                     )
                 }
             },
@@ -233,12 +240,19 @@ fun onSignUpWithEmailClick(
     navController: NavController,
     authViewModel: AuthViewModel,
     context: Context,
+    coroutine: CoroutineScope,
 ) {
     // Sign Up Example
     authManager.signUpWithEmail(
         email = email,
         password = password,
         onComplete = { user ->
+            coroutine.launch {
+                val repo = MyRepository()
+                if (user != null) {
+                    repo.storeUserInFirestore(user)
+                }
+            }
             authViewModel.isLoggedIn.value = true
             // Sign-up successful, user is signed in
             // Handle the user object or navigate to the home screen
