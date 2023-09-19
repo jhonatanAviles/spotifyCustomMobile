@@ -14,7 +14,7 @@ fun AlbumsScreen(
     paletteViewModel: PaletteViewModel
 ) {
     Column {
-        PageHeader(title = "Albums")
+        PageHeader(title = if (artistId != null) "Albums" else "All Albums")
         AlbumView(
             navController = navController,
             artistId = artistId,

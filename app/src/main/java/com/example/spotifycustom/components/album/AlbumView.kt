@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,7 +23,15 @@ fun AlbumView(navController: NavController, artistId: String?, paletteViewModel:
         factory = AlbumsViewModelFactory(MyRepository())
     )
 
-    val albumsState = albumsViewModel.albums.collectAsState(initial = emptyList())
+    val albumsState =
+        if (artistId == null) albumsViewModel.albums.collectAsState(initial = emptyList())
+        else {
+            // Use remember to store StateFlow based on albumId
+            val stateFlow = remember(artistId) {
+                albumsViewModel.albumsByArtist(artistId)
+            }
+            stateFlow.collectAsState(initial = emptyList())
+        }
     val albums = albumsState.value // Access the value of the State
 
     val onAlbumClick = navigateRelatedSongs(navController)

@@ -15,4 +15,12 @@ class AlbumsViewModel(repository: MyRepository) : ViewModel() {
         started = SharingStarted.WhileSubscribed(), // Optional: SharingStarted parameter
         initialValue = emptyList() // Optional: Initial value
     )
+
+    val albumsByArtist: (artisId: String) -> StateFlow<List<DomainAlbum>> = { artisId ->
+        repository.getAlbumsByArtist(artisId).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(), // Optional: SharingStarted parameter
+            initialValue = emptyList() // Optional: Initial value
+        )
+    }
 }

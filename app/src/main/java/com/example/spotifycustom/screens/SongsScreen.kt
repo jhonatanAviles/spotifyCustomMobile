@@ -33,7 +33,7 @@ fun SongsScreen(albumId: String?) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(5f)) {
-            PageHeader(title = "Songs")
+            PageHeader(title = if (albumId != null) "Songs" else "All Songs")
             SongView(songToReproduce, albumId, songsViewModel)
         }
         if (songToReproduce.value.songUrl.isNotEmpty())
