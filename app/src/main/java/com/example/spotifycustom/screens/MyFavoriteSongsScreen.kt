@@ -1,6 +1,5 @@
 package com.example.spotifycustom.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,8 +28,6 @@ fun MyFavoriteSongsScreen() {
     val songsViewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(MyRepository())
     )
-
-    Log.d("RENDERS", "RENDERING...")
 
     val authManager = FirebaseAuthenticationManager()
 
