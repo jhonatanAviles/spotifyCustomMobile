@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
+    id ("com.google.firebase.crashlytics")
 }
 
 android {
@@ -68,12 +70,22 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation ("androidx.compose.foundation:foundation:1.5.1")
+    implementation("androidx.compose.foundation:foundation:1.5.1")
 
-    implementation ("androidx.navigation:navigation-compose:2.7.2")
+    implementation("androidx.navigation:navigation-compose:2.7.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
-    implementation ("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
+
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    implementation("androidx.palette:palette-ktx:1.0.0")
+
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
+
+    implementation("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation("com.google.android.exoplayer:exoplayer-ui:2.19.1")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.2.3"))
@@ -81,8 +93,11 @@ dependencies {
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation ("com.google.firebase:firebase-auth")
-    implementation ("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation ("com.google.firebase:firebase-crashlytics-ktx")
+    implementation ("com.google.firebase:firebase-analytics-ktx")
 
-
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

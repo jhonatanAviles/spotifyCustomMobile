@@ -1,3 +1,11 @@
 package com.example.spotifycustom.data.dto
 
-data class Artist(val id: String, val name: String, val genre: String, val imageUrl: String)
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class Artist(
+    val name: String? = null,
+    val genre: String? = null,
+    val imageUrl: String? = null,
+) : Parcelable

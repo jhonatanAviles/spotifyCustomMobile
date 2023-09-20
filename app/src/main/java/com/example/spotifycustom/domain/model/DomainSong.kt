@@ -6,5 +6,6 @@ data class DomainSong(
     val albumId: String,
     val artistId: String,
     val imageUrl: String,
-    val songUrl: String
+    val songUrl: String,
+    val durationInSeconds: Double,
 )

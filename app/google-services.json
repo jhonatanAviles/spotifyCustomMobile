@@ -80,6 +80,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "496463203962-7qsll0eba3p3blptupf8bch2fvkln3m2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spotifycustom",
+            "certificate_hash": "4ae9f7703d3363fe792cc5146f9372e2669dd045"
+          }
+        },
+        {
           "client_id": "496463203962-bs88tbg1ucn4q9jm069jso0h4dt8dg7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
